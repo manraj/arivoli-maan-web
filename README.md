@@ -4,7 +4,7 @@ Reusable Spring Boot web/API framework library for Arivoli Academy services.
 
 ## Overview
 
-`arivoli-maan-web` builds on [arivoli-maan-core](https://github.com/arivoliacademy/arivoli-maan-core) and provides auto-configured web standards for Spring Boot applications: global exception handling, validation error mapping, correlation ID propagation, and request logging.
+`arivoli-maan-web` builds on [arivoli-maan-core](https://github.com/manraj/arivoli-maan-core) and provides auto-configured web standards for Spring Boot applications: global exception handling, validation error mapping, correlation ID propagation, and request logging.
 
 Add the dependency and the framework activates automatically — no manual `@Import` required.
 
@@ -224,7 +224,7 @@ includeBuild('../arivoli-maan-core')
 
 | Project | Description |
 |---------|-------------|
-| [arivoli-maan-core](https://github.com/arivoliacademy/arivoli-maan-core) | Core API models, exceptions, utilities, and constants |
+| [arivoli-maan-core](https://github.com/manraj/arivoli-maan-core) | Core API models, exceptions, utilities, and constants |
 
 ## License
 

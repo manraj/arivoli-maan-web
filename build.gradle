@@ -1,5 +1,7 @@
 plugins {
     id 'java-library'
+    id 'signing'
+    id 'com.vanniktech.maven.publish' version '0.37.0'
     id 'org.springframework.boot' version '3.4.1' apply false
     id 'io.spring.dependency-management' version '1.1.7'
 }
@@ -11,8 +13,6 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
-    withSourcesJar()
-    withJavadocJar()
 }
 
 repositories {
@@ -50,5 +50,56 @@ tasks.named('javadoc') {
     }
     if (JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
+    }
+}
+
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+
+    coordinates(group.toString(), 'arivoli-maan-web', version.toString())
+
+    pom {
+        name = 'arivoli-maan-web'
+        description = 'Reusable Spring Boot web framework with exception handling and request filters'
+        inceptionYear = '2026'
+        url = 'https://github.com/manraj/arivoli-maan-web'
+        licenses {
+            license {
+                name = 'The Apache License, Version 2.0'
+                url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution = 'repo'
+            }
+        }
+        developers {
+            developer {
+                id = 'manraj'
+                name = 'Manraj'
+                url = 'https://github.com/manraj'
+            }
+        }
+        scm {
+            url = 'https://github.com/manraj/arivoli-maan-web'
+            connection = 'scm:git:git://github.com/manraj/arivoli-maan-web.git'
+            developerConnection = 'scm:git:ssh://git@github.com/manraj/arivoli-maan-web.git'
+        }
+    }
+}
+
+// vanniktech only auto-wires signingInMemoryKey*; also accept signingKey/signingPassword.
+afterEvaluate {
+    def key = findProperty('signingInMemoryKey') ?: findProperty('signingKey') ?: System.getenv('ORG_GRADLE_PROJECT_signingInMemoryKey')
+    def password = findProperty('signingInMemoryKeyPassword') ?: findProperty('signingPassword') ?: System.getenv('ORG_GRADLE_PROJECT_signingInMemoryKeyPassword')
+    if (password == null) {
+        password = ''
+    }
+    if (!key) {
+        throw new GradleException(
+            "Missing GPG signing key. Set signingInMemoryKey (preferred) or signingKey in ~/.gradle/gradle.properties"
+        )
+    }
+    def armored = key.toString().replace('\\n', '\n').replace('\r', '')
+    signing {
+        useInMemoryPgpKeys(armored, password.toString())
     }
 }
